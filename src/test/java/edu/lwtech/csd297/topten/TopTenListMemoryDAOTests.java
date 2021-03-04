@@ -59,8 +59,8 @@ class TopTenListMemoryDAOTests {
         Exception ex = null;
 
         assertEquals(3, topTenListDAO.size());
-        int listID = topTenListDAO.insert(romanList);        // Add a second copy of the roman list
-        assertTrue(listID > 0);
+        int recID = topTenListDAO.insert(romanList);        // Add a second copy of the roman list
+        assertTrue(recID > 0);
         assertEquals(4, topTenListDAO.size());
 
         ex = assertThrows(IllegalArgumentException.class,

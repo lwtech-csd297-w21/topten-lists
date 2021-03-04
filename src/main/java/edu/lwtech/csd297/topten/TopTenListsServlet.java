@@ -53,12 +53,20 @@ public class TopTenListsServlet extends HttpServlet {
         logger.info("Successfully initialized FreeMarker");
 
         logger.info("Initializing the DAOs...");
-        membersDAO = new MemberMemoryDAO();
-        listsDAO = new TopTenListMemoryDAO();
+        // membersDAO = new MemberMemoryDAO();
+        // listsDAO = new TopTenListMemoryDAO();
+        membersDAO = new MemberSqlDAO();
+        listsDAO = new TopTenListSqlDAO();
 
-        if (!membersDAO.initialize(""))
+        //String initParams = "jdbc:mariadb://localhost:3306/topten";
+        String initParams = "jdbc:mariadb://topten-lists-mysql-db.cv18zcsjzteu.us-west-2.rds.amazonaws.com:3306/topten";
+
+        initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
+        initParams += "&user=topten&password=topten-rox";             // In the real word, credentials should be stored in AWS Secrets Manager
+
+        if (!membersDAO.initialize(initParams))
             throw new UnavailableException("Unable to initialize the MembersDAO.");
-        if (!listsDAO.initialize(""))
+        if (!listsDAO.initialize(initParams))
             throw new UnavailableException("Unable to initialize the ListsDAO.");
         logger.info("Successfully initialized the DAOs!");
 
