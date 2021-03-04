@@ -53,12 +53,21 @@ public class TopTenListsServlet extends HttpServlet {
         logger.info("Successfully initialized FreeMarker");
 
         logger.info("Initializing the DAOs...");
-        membersDAO = new MemberMemoryDAO();
-        listsDAO = new TopTenListMemoryDAO();
+        // membersDAO = new MemberMemoryDAO();
+        // listsDAO = new TopTenListMemoryDAO();
+        membersDAO = new MemberSqlDAO();
+        listsDAO = new TopTenListSqlDAO();
 
-        if (!membersDAO.initialize(""))
+        //String jdbc = "jdbc:mariadb://localhost:3306/topten?useSSL=false&allowPublicKeyRetrieval=true";
+        String jdbc = "jdbc:mariadb://csd297.cv18zcsjzteu.us-west-2.rds.amazonaws.com:3306/topten?useSSL=false&allowPublicKeyRetrieval=true";
+        String user = "topten";
+        String password = "topten-rox";             // In the real-world, this would be in AWS Secrets Manager
+
+        String initParams = jdbc + "&user=" + user + "&password=" + password;
+
+        if (!membersDAO.initialize(initParams))
             throw new UnavailableException("Unable to initialize the MembersDAO.");
-        if (!listsDAO.initialize(""))
+        if (!listsDAO.initialize(initParams))
             throw new UnavailableException("Unable to initialize the ListsDAO.");
         logger.info("Successfully initialized the DAOs!");
 
