@@ -44,7 +44,7 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
         }
 
         String query = "INSERT INTO TopTenLists";
-        query += " (description, item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, published, ownerID, numViews, numLikes)";
+        query += " (description, item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, isPublished, ownerID, numViews, numLikes)";
         query += " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         String description = list.getDescription();
@@ -54,28 +54,28 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
         String numViews = "" + list.getNumViews();
         String numLikes = "" + list.getNumLikes();
 
-        int listID = SQLUtils.executeSQLInsert(conn, query, "listID", description,
+        int recID = SQLUtils.executeSQLInsert(conn, query, "recID", description,
             items.get(0), items.get(1), items.get(2), items.get(3), items.get(4),
             items.get(5), items.get(6), items.get(7), items.get(8), items.get(9),
             isPublished, ownerID, numViews, numLikes);    
         
-        logger.debug("TopTenList successfully inserted with listID = " + listID);
-        return listID;
+        logger.debug("TopTenList successfully inserted with recID = " + recID);
+        return recID;
     }
 
-    public void delete(int listID) {
-        logger.debug("Trying to delete TopTenList with ID: " + listID);
+    public void delete(int recID) {
+        logger.debug("Trying to delete TopTenList with ID: " + recID);
 
-        String query = "DELETE FROM TopTenLists WHERE listID=" + listID;
+        String query = "DELETE FROM TopTenLists WHERE recID=" + recID;
         SQLUtils.executeSQL(conn, query);
     }
     
-    public TopTenList retrieveByID(int listID) {
-        logger.debug("Trying to get TopTenList with ID: " + listID);
+    public TopTenList retrieveByID(int recID) {
+        logger.debug("Trying to get TopTenList with ID: " + recID);
         
-        String query = "SELECT listID, description,";
+        String query = "SELECT recID, description,";
         query += " item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, isPublished, ownerID, numViews, numLikes";
-        query += " FROM TopTenLists WHERE listID=" + listID;
+        query += " FROM TopTenLists WHERE recID=" + recID;
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
@@ -99,9 +99,9 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
         if (index < 1)
             return null;
 
-        String query = "SELECT listID, description,";
+        String query = "SELECT recID, description,";
         query += " item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, isPublished, ownerID, numViews, numLikes";
-        query += " FROM TopTenLists ORDER BY listID LIMIT " + index;
+        query += " FROM TopTenLists ORDER BY recID LIMIT " + index;
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
@@ -118,9 +118,9 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
     public List<TopTenList> retrieveAll() {
         logger.debug("Getting all TopTenLists...");
         
-        String query = "SELECT listID, description,";
+        String query = "SELECT recID, description,";
         query += " item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, isPublished, ownerID, numViews, numLikes";
-        query += " FROM TopTenLists ORDER BY listID";
+        query += " FROM TopTenLists ORDER BY recID";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
@@ -140,7 +140,7 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
     public List<Integer> retrieveAllIDs() {
         logger.debug("Getting List IDs...");
 
-        String query = "SELECT listID FROM TopTenLists ORDER BY listID";
+        String query = "SELECT recID FROM TopTenLists ORDER BY recID";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
@@ -149,23 +149,23 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
             return null;
         }
         
-        List<Integer> listIDs = new ArrayList<>();
+        List<Integer> recIDs = new ArrayList<>();
         for (SQLRow row : rows) {
-            String value = row.getItem("listID");
+            String value = row.getItem("recID");
             int i = Integer.parseInt(value);
-            listIDs.add(i);
+            recIDs.add(i);
         }
-        return listIDs;
+        return recIDs;
     }
 
     public List<TopTenList> search(String keyword) {
         logger.debug("Searching for list with '" + keyword + "'");
 
-        String query = "SELECT listID FROM TopTenLists WHERE ";
+        String query = "SELECT recID FROM TopTenLists WHERE ";
         for (int i=1; i <= 10; i++) {
             query += "item" + i + " like '%" + keyword + "%' OR ";
         }        
-        query += " ORDER BY listID";
+        query += " ORDER BY recID";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
         
@@ -187,7 +187,7 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
 
         String query = "UPDATE TopTenLists " + 
                 "SET numViews='" + list.getNumViews() + "', numLikes='" + list.getNumLikes() + "' " +
-                "WHERE listID='" + list.getRecID() + "'";
+                "WHERE recID='" + list.getRecID() + "'";
 
         List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
 
@@ -213,7 +213,7 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
 
     private TopTenList convertRowToList(SQLRow row) {
         List<String> items = new ArrayList<>();
-        int listID = Integer.parseInt(row.getItem("listID"));
+        int recID = Integer.parseInt(row.getItem("recID"));
         String description = row.getItem("description");
         for (int i=10; i > 0; i--)                              // Insert items going from #10 down to #1 so that they print out correctly
             items.add(row.getItem("item"+i));
@@ -221,7 +221,7 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
         int ownerID = Integer.parseInt(row.getItem("ownerID"));
         int numViews = Integer.parseInt(row.getItem("numViews"));
         int numLikes = Integer.parseInt(row.getItem("numLikes"));
-        return new TopTenList(listID, description, items, isPublished, ownerID, numViews, numLikes);
+        return new TopTenList(recID, description, items, isPublished, ownerID, numViews, numLikes);
     }
 
 }

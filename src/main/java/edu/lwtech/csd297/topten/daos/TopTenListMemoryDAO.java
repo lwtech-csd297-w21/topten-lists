@@ -85,11 +85,11 @@ public class TopTenListMemoryDAO implements DAO<TopTenList> {
     public List<Integer> retrieveAllIDs() {
         logger.debug("Getting list IDs...");
 
-        List<Integer> listIDs = new ArrayList<>();
+        List<Integer> recIDs = new ArrayList<>();
         for (TopTenList list : topTenListDB) {
-            listIDs.add(list.getRecID());
+            recIDs.add(list.getRecID());
         }
-        return listIDs;
+        return recIDs;
     }
 
     public List<TopTenList> search(String keyword) {

@@ -40,8 +40,8 @@ class MemberMemoryDAOTests {
         Member sally = new Member("Sally", "123456");
 
         assertEquals(3, memberDAO.size());
-        int memberID = memberDAO.insert(sally);
-        assertTrue(memberID > 0);
+        int recID = memberDAO.insert(sally);
+        assertTrue(recID > 0);
         assertEquals(4, memberDAO.size());
 
         ex = assertThrows(IllegalArgumentException.class,

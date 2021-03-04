@@ -105,11 +105,11 @@ public class MemberMemoryDAO implements DAO<Member> {
     public List<Integer> retrieveAllIDs() {
         logger.debug("Getting all member IDs...");
 
-        List<Integer> memberIDs = new ArrayList<>();
+        List<Integer> recIDs = new ArrayList<>();
         for (Member member : memberDB) {
-            memberIDs.add(member.getRecID());
+            recIDs.add(member.getRecID());
         }
-        return memberIDs;
+        return recIDs;
     }
 
     public List<Member> search(String keyword) {

@@ -58,12 +58,11 @@ public class TopTenListsServlet extends HttpServlet {
         membersDAO = new MemberSqlDAO();
         listsDAO = new TopTenListSqlDAO();
 
-        //String jdbc = "jdbc:mariadb://localhost:3306/topten?useSSL=false&allowPublicKeyRetrieval=true";
-        String jdbc = "jdbc:mariadb://csd297.cv18zcsjzteu.us-west-2.rds.amazonaws.com:3306/topten?useSSL=false&allowPublicKeyRetrieval=true";
-        String user = "topten";
-        String password = "topten-rox";             // In the real-world, this would be in AWS Secrets Manager
+        //String initParams = "jdbc:mariadb://localhost:3306/topten";
+        String initParams = "jdbc:mariadb://topten-lists-mysql-db.cv18zcsjzteu.us-west-2.rds.amazonaws.com:3306/topten";
 
-        String initParams = jdbc + "&user=" + user + "&password=" + password;
+        initParams += "?useSSL=false&allowPublicKeyRetrieval=true";
+        initParams += "&user=topten&password=topten-rox";             // In the real word, credentials should be stored in AWS Secrets Manager
 
         if (!membersDAO.initialize(initParams))
             throw new UnavailableException("Unable to initialize the MembersDAO.");
