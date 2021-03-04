@@ -4,6 +4,7 @@
         <title>TopTen-Lists.com - Homepage</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/static/topten.css">
     </head>
     <body>
         <h1>TopTen Lists</h1>
@@ -12,17 +13,21 @@
         <a href="?cmd=show">Show me the first list!</a><br />
         <br />
 
-        <table border="1">
-            <tr>
-                <th>Likes</th><th>Description</th><th>Views</th>
-            </tr>
-            <#list topTenLists as topTenList>
-            <tr>
-                <td>${topTenList.numLikes}</td>
-                <td><a href="?cmd=show&index=${topTenList?index}">${topTenList.description}</a></td>
-                <td>${topTenList.numViews}</td>
-            </tr>
-            </#list>
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Likes</th><th scope="col">Description</th><th scope="col">Views</th>
+                </tr>
+            </thead>
+            <tbody>
+                <#list topTenLists as topTenList>
+                <tr>
+                    <td class="list-likes">${topTenList.numLikes}</td>
+                    <td class="list-description"><a href="?cmd=show&index=${topTenList?index}">${topTenList.description}</a></td>
+                    <td class="list-views">${topTenList.numViews}</td>
+                </tr>
+                </#list>
+            </tbody>
         </table><br />
         <br />
 
