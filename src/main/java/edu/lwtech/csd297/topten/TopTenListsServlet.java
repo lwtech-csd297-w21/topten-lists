@@ -13,7 +13,7 @@ import freemarker.template.*;
 import edu.lwtech.csd297.topten.daos.*;
 import edu.lwtech.csd297.topten.pojos.*;
 
-@WebServlet(name = "topten", urlPatterns = {"/"}, loadOnStartup = 0)
+@WebServlet(name = "topten", urlPatterns = {"/*"}, loadOnStartup = 0)
 public class TopTenListsServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;        // Unused
