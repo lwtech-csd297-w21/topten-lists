@@ -28,15 +28,14 @@
             </tbody>
         </table>
 
-        <p>Likes: ${topTenList.numLikes}
-            <input type="button" value="Like" onclick="location.href='?cmd=like&index=${listNumber-1}&id=${topTenList.recID?c}';" />
+        <p>
+        <a href="?cmd=show&index=${prevIndex}"><img src="/static/previous.png" width=30/></a> &nbsp;
+        Likes: ${topTenList.numLikes}
+            <input type="button" value="Like" onclick="location.href='?cmd=like&index=${listNumber-1}&id=${topTenList.recID?c}';" /> &nbsp;
+        <a href="?cmd=show&index=${nextIndex}"><img src="/static/next.png" width=30 /></a>
         </p>
 
         <hr />
-
-        <a href="?cmd=show&index=${prevIndex}">Previous</a> &nbsp; &nbsp;
-        <a href="?cmd=show&index=${nextIndex}">Next</a><br/>
-        <br />
 
         <#if loggedIn>
             <a href="?cmd=add">Add a New List</a><br />
