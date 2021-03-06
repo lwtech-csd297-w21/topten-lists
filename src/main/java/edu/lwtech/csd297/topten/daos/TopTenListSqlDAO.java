@@ -163,11 +163,12 @@ public class TopTenListSqlDAO implements DAO<TopTenList> {
 
         String query = "SELECT recID FROM TopTenLists WHERE ";
         for (int i=1; i <= 10; i++) {
-            query += "item" + i + " like '%" + keyword + "%' OR ";
-        }        
+            query += "item" + i + " like ? OR ";
+        }
         query += " ORDER BY recID";
 
-        List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+        keyword = "%" + keyword + "%";
+        List<SQLRow> rows = SQLUtils.executeSQL(conn, query, keyword, keyword, keyword, keyword, keyword, keyword, keyword, keyword, keyword, keyword);
         
         if (rows == null) {
             logger.debug("No lists found!");

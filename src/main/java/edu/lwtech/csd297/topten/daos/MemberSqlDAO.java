@@ -140,10 +140,11 @@ public class MemberSqlDAO implements DAO<Member> {
         logger.debug("Searching for member with '" + keyword + "'");
 
         String query = "SELECT recID, username, password FROM Members WHERE";
-        query += " username like '%" + keyword + "%'";
+        query += " username like ?";
         query += " ORDER BY recID";
 
-        List<SQLRow> rows = SQLUtils.executeSQL(conn, query);
+        keyword = "%" + keyword + "%";
+        List<SQLRow> rows = SQLUtils.executeSQL(conn, query, keyword);
         
         if (rows == null) {
             logger.debug("No members found!");
