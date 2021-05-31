@@ -8,6 +8,8 @@ import org.apache.logging.log4j.*;
 class SQLRow {
     private static final Logger logger = LogManager.getLogger(SQLRow.class.getName());
 
+    private static final String VALUE_KEY = "Value";
+
     private Map<String,String> items;
 
     public SQLRow() {
@@ -24,11 +26,11 @@ class SQLRow {
     }
 
     public SQLRow(String value) {
-        this("Value", value);
+        this(VALUE_KEY, value);
     }
 
     public SQLRow(int value) {
-        this("Value", ""+value);
+        this(VALUE_KEY, ""+value);
     }
 
     public SQLRow(List<String> columns, ResultSet rs) {
@@ -44,34 +46,36 @@ class SQLRow {
     }
 
     public String getItem(String name) {
-        if (name == null) throw new IllegalArgumentException("Null parameter passed to getItem()");
+        if (name == null) throw new IllegalArgumentException("name cannot be passed to getItem()");
         return items.get(name);
     }
 
     public String getItem() {
-        return getItem("Value");
+        return getItem(VALUE_KEY);
     }
 
     public void addItem(String name, String value) {
-        if (name == null || value == null) throw new IllegalArgumentException("Null parameter passed to getItem()");
+        if (name == null || value == null) throw new IllegalArgumentException("Null parameter passed to addItem()");
         items.put(name, value);
     }
 
     public void removeItem(String name) {
-        if (name == null) throw new IllegalArgumentException("Null parameter passed to getItem()");
+        if (name == null) throw new IllegalArgumentException("Null parameter passed to removeItem()");
         items.remove(name);
     }
 
     @Override
     public String toString() {
-        String s = "{";
+        StringBuilder s = new StringBuilder("{");
         String comma = "";
-        for (String name : items.keySet()) {
-            s += comma + "{" + name + "," + items.get(name) + "}";
+        for (Map.Entry<String, String> entry : items.entrySet()) {
+            String name = entry.getKey();
+            String value = entry.getValue();
+            s.append(comma).append("{").append(name).append(",").append(value).append("}");
             comma = ",";
         }
-        s += "}";
-        return s;
+        s.append("}");
+        return s.toString();
     }
     
 }

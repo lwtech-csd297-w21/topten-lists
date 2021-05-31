@@ -44,7 +44,7 @@ public class TopTenListMemoryDAO implements DAO<TopTenList> {
             throw new IllegalArgumentException("insert: list cannot be null");
         if (list.getRecID() != -1)
             throw new IllegalArgumentException("insert: list is already in database (recID != -1)");
-        logger.debug("Inserting " + list + "...");
+        logger.debug("Inserting {}...", list);
 
         list.setRecID(nextListRecID.incrementAndGet());
         topTenListDB.add(list);
@@ -79,7 +79,7 @@ public class TopTenListMemoryDAO implements DAO<TopTenList> {
 
     public List<TopTenList> retrieveAll() {
         logger.debug("Getting all lists ...");
-        return new ArrayList<>(topTenListDB);       // Return copy of List colleciton
+        return new ArrayList<>(topTenListDB);       // Return copy of List collection
     }
 
     public List<Integer> retrieveAllIDs() {
@@ -102,7 +102,6 @@ public class TopTenListMemoryDAO implements DAO<TopTenList> {
         for (TopTenList list : topTenListDB) {
             if (list.getDescription().toLowerCase().contains(keyword)) {
                 listsFound.add(list);
-                break;
             }
         }
         logger.debug("Found {} lists with the keyword '{}'!", listsFound.size(), keyword);
@@ -204,7 +203,7 @@ public class TopTenListMemoryDAO implements DAO<TopTenList> {
         );
         insert(new TopTenList(description, items, owner));
 
-        logger.info(size() + " lists inserted");
+        logger.info("{} lists inserted", size());
     }
 
 }
