@@ -12,13 +12,13 @@ class SQLUtils {
     private SQLUtils() { }                                          // Hide the implicit public constructor
 
     public static Connection connect(String initParams) {
-        logger.debug("Connecting to " + initParams + "...");
+        logger.debug("Connecting to {}...", initParams);
 
         String driverClass = "org.mariadb.jdbc.Driver";
         try {
             Class.forName(driverClass);                             // Dynamically loads the driver from the WAR file
         } catch (ClassNotFoundException e) {
-            logger.error("Unable to find JDBC driver on classpath: " + driverClass , e);
+            logger.error("Unable to find JDBC driver on classpath: {}", driverClass , e);
             return null;
         }
 
@@ -26,7 +26,7 @@ class SQLUtils {
         try {
             conn = DriverManager.getConnection(initParams);
         } catch (SQLException e) {
-            logger.error("Unable to connect to SQL Database with: " + initParams, e);
+            logger.error("Unable to connect to SQL Database with: {}", initParams, e);
             return null;
         }
 
@@ -35,12 +35,9 @@ class SQLUtils {
     }
 
     public static List<SQLRow> executeSQL(Connection conn, String query, String... arguments) {
-        logger.debug("Executing SQL statement: " + query);
+        logger.debug("Executing SQL statement: {}", query);
 
-        try {
-            // Create the new statement object
-            PreparedStatement stmt = conn.prepareStatement(query);
-
+        try ( PreparedStatement stmt = conn.prepareStatement(query); ) {
             // Substitute in the argument values for the question marks
             int position = 1;
             for (String arg : arguments) {
@@ -69,29 +66,27 @@ class SQLUtils {
                 List<SQLRow> rows = new ArrayList<>();
                 while (sqlResults.next()) {
                     SQLRow row = new SQLRow(columns, sqlResults);
-                    logger.debug(row.toString());
                     rows.add(row);
                 }
 
                 return rows;
             }
         } catch (SQLException e) {
-            logger.error("SQL Exception caught in executeSQL: " + query, e);
-            return null;
+            logger.error("SQL Exception caught in executeSQL: {}", query, e);
+            return new ArrayList<>();
         }
-        return null;
+        return new ArrayList<>();
     }
 
 
     public static int executeSQLInsert(Connection conn, String query, String recID, String... arguments) {
-        logger.debug("Executing SQL Insert: " + query);
+        logger.debug("Executing SQL Insert: {}", query);
 
         int newID = -1;
         String[] returnColumns = new String[] { recID };
 
-        try {
+        try ( PreparedStatement stmt = conn.prepareStatement(query, returnColumns); ) {
             // Create the new statement object, specifying the recID return column as well
-            PreparedStatement stmt = conn.prepareStatement(query, returnColumns);
 
             // Substitute in the argument values for the question marks
             int position = 1;
@@ -106,7 +101,7 @@ class SQLUtils {
             keys.next();
             newID = keys.getInt(1);
         } catch (SQLException e) {
-            logger.error("SQL Exception caught in executeSQLInsert: " + query, e);
+            logger.error("SQL Exception caught in executeSQLInsert: {}", query, e);
             return -1;
         }
 

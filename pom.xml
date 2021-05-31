@@ -86,6 +86,8 @@
                     <configuration>
                         <excludes>
                             <exclude>**/*Servlet.*</exclude>
+                            <exclude>**/*Sql*</exclude>
+                            <exclude>**/*SQL*</exclude>
                         </excludes>    
                     </configuration>
                     <executions>
